@@ -1,0 +1,59 @@
+.grid-container {
+  height: 100vh;
+  background-image: url("../../images/table/table-background-modified.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+.first-row {
+  height: 35%;
+}
+
+.second-row {
+  display: flex;
+  justify-content: flex-end;
+  height: 30%;
+}
+
+.second-row-col-flex-end {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.third-row {
+  height: 35%;
+}
+
+.first-row-first-col {
+  border: 2px solid #ffffff;
+}
+
+.first-row-second-col {
+  border: 2px solid #ffffff;
+}
+
+.first-row-third-col {
+  border: 2px solid #ffffff;
+}
+
+.third-row-first-col {
+  border: 2px solid #ffffff;
+}
+
+.third-row-second-col {
+  border: 2px solid #ffffff;
+}
+
+.third-row-third-col {
+  display: flex;
+  flex-direction: column;
+
+  border: 2px solid #ffffff;
+}
+
+.action-btn {
+  margin-top: 15px;
+}
