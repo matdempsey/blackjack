@@ -30,7 +30,7 @@ const PlayingTable = ({ deck }) => {
     setDealerHand(dealer);
   }, []);
 
-  // accumalate scores
+  // accumulate scores
   useEffect(() => {
     const pScore =
       playerHand.length > 0
@@ -50,7 +50,7 @@ const PlayingTable = ({ deck }) => {
     setDealerScore(dScore);
 
     if (pScore > 21) {
-      setAlertMsgValue("You've gone bust!");
+      setAlertMsgValue("Bust!");
       setGameOver(true);
     }
   }, [playerHand]);
