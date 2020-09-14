@@ -1,4 +1,4 @@
-import DECK_OF_CARDS from "././constants/deck.js";
+import DECK_OF_CARDS from "../constants/deck.js";
 
 export const getShuffledDeck = () => {
   let shuffledDeck = [];
