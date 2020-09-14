@@ -62,9 +62,9 @@ const PlayingTable = ({ deck }) => {
 
   const onStandClick = () => {
     if (playerScore > dealerScore) {
-      setAlertMsgValue("You've won!");
+      setAlertMsgValue("You Win!");
     } else if (playerScore < dealerScore) {
-      setAlertMsgValue("You've Lost!");
+      setAlertMsgValue("You Lose!");
     } else {
       setAlertMsgValue("You've tied with the Dealer.");
     }
