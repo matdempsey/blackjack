@@ -2,4 +2,15 @@
   margin: 10px 10px 10px 10px;
   width: 110px;
   height: 160px;
+  animation-name: card-fade-in;
+  animation-duration: 1.2s;
+}
+
+@keyframes card-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
