@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import PlayingTable from "./playing-table/PlayingTable.js";
-import { getShuffledDeck } from "../constants/deck.js";
+import { getShuffledDeck } from ".././shuffle.js";
 
 import "./App.css";
 
