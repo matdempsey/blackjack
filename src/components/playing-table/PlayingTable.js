@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Container, Col, Row, Button, Alert } from "reactstrap";
+import { Container, Col, Row, Button } from "reactstrap";
 import Score from "./../label/Score.js";
 import Hand from "../hand/Hand.js";
 import AlertMessage from "../alert-message/AlertMessage.js";
+import { dealerActionHit } from "../../ai/dealerAI.js";
 
 import deckImage from "../../images/cards/back/regular_back.png";
 import "./PlayingTable.css";
@@ -19,15 +20,17 @@ const PlayingTable = ({ deck }) => {
 
   // intial hand
   useEffect(() => {
-    let player = [];
-    let dealer = [];
+    let tempPlayerArr = [];
+    let tempDealerArr = [];
 
     for (let i = 0; i < 4; i++) {
-      i % 2 === 0 ? player.push(d.shift()) : dealer.push(d.shift());
+      i % 2 === 0
+        ? tempPlayerArr.push(d.shift())
+        : tempDealerArr.push(d.shift());
     }
 
-    setPlayerHand(player);
-    setDealerHand(dealer);
+    setPlayerHand(tempPlayerArr);
+    setDealerHand(tempDealerArr);
   }, []);
 
   // accumulate scores
@@ -49,18 +52,49 @@ const PlayingTable = ({ deck }) => {
     setPlayerScore(pScore);
     setDealerScore(dScore);
 
+    // bust if initial hand contains two aces, as ace only represents 11 points currently.
     if (pScore > 21) {
       setAlertMsgValue("Bust!");
       setGameOver(true);
+    } else if (dScore > 21) {
+      setAlertMsgValue("Dealer is Bust. You Win!");
+      setGameOver(true);
     }
-  }, [playerHand]);
+  }, [playerHand, dealerHand]);
 
   const onHitClick = () => {
-    const player = d.shift();
-    setPlayerHand(playerHand.concat(player));
+    const dealerAct = dealerActionHit(dealerScore);
+
+    if (dealerAct) {
+      const hitCard = d.shift();
+      setDealerHand(dealerHand.concat(hitCard));
+    }
+
+    const hitCard = d.shift();
+    setPlayerHand(playerHand.concat(hitCard));
   };
 
   const onStandClick = () => {
+    let dealerHit = true;
+    let mergingArr = [];
+    let dScore = dealerScore;
+
+    while (dealerHit) {
+      dealerHit = dealerActionHit(dScore);
+
+      if (dealerHit) {
+        const hitCard = d.shift();
+        dScore = dScore + hitCard.points;
+        mergingArr.push(hitCard);
+      }
+    }
+
+    if (mergingArr.length > 0) {
+      setDealerHand(dealerHand.concat(mergingArr));
+    }
+  };
+
+  const onEndClick = () => {
     if (playerScore > dealerScore) {
       setAlertMsgValue("You Win!");
     } else if (playerScore < dealerScore) {
@@ -82,9 +116,7 @@ const PlayingTable = ({ deck }) => {
           <Col xs="8" className="first-row-second-col">
             <Hand owner={"Dealer"} cards={dealerHand} />
           </Col>
-          <Col xs="2" className="first-row-third-col">
-            blank
-          </Col>
+          <Col xs="2" className="first-row-third-col"></Col>
         </Row>
 
         <Row className="second-row">
@@ -119,6 +151,9 @@ const PlayingTable = ({ deck }) => {
               onClick={onStandClick}
             >
               Stand
+            </Button>
+            <Button className="action-btn" onClick={onEndClick}>
+              End
             </Button>
           </Col>
         </Row>
