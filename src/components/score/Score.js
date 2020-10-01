@@ -3,10 +3,10 @@ import { Label } from "reactstrap";
 
 import "./Score.css";
 
-const Score = ({ name, points }) => {
+const Score = ({ name, points, hidden }) => {
   return (
     <div>
-      <Label>{`${name} Score: ${points}`}</Label>
+      <Label hidden={hidden}>{`${name} Score: ${points}`}</Label>
     </div>
   );
 };

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Container, Col, Row, Button } from "reactstrap";
-import Score from "./../label/Score.js";
-import Hand from "../hand/Hand.js";
+import Score from "../score/Score.js";
+import Player from "../hand/Player.js";
+import Dealer from "../hand/Dealer.js";
+
 import AlertMessage from "../alert-message/AlertMessage.js";
 import { dealerActionHit } from "../../ai/dealerAI.js";
 
@@ -12,9 +14,10 @@ const PlayingTable = ({ deck }) => {
   const d = deck;
 
   const [playerHand, setPlayerHand] = useState([]);
-  const [dealerHand, setDealerHand] = useState([]);
   const [playerScore, setPlayerScore] = useState(0);
+  const [dealerHand, setDealerHand] = useState([]);
   const [dealerScore, setDealerScore] = useState(0);
+  const [flipped, setFlipped] = useState(true);
   const [alertMsgValue, setAlertMsgValue] = useState("");
   const [showAlertMsg, setShowAlertMsg] = useState(false);
   const [disabled, setDisabled] = useState(false);
@@ -56,10 +59,12 @@ const PlayingTable = ({ deck }) => {
     // bust if initial hand contains two aces, as ace only represents 11 points currently.
     if (pScore > 21) {
       setAlertMsgValue("Bust! You Lose.");
+      setFlipped(false);
       setDisabled(true);
       setShowAlertMsg(true);
     } else if (dScore > 21) {
       setAlertMsgValue("Dealer is Bust. You Win!");
+      setFlipped(false);
       setDisabled(true);
       setShowAlertMsg(true);
     }
@@ -106,8 +111,9 @@ const PlayingTable = ({ deck }) => {
     } else if (playerScore === dealerScore) {
       setAlertMsgValue("You've tied with the Dealer.");
     }
-    setShowAlertMsg(true);
+    setFlipped(false);
     setDisabled(true);
+    setShowAlertMsg(true);
   };
 
   return (
@@ -116,10 +122,10 @@ const PlayingTable = ({ deck }) => {
       <Container className="grid-container" fluid={true}>
         <Row className="first-row">
           <Col xs="2" className="first-row-first-col">
-            <Score name={"Dealer"} points={dealerScore} />
+            <Score name={"Dealer"} points={dealerScore} hidden={flipped} />
           </Col>
           <Col xs="8" className="first-row-second-col">
-            <Hand owner={"Dealer"} cards={dealerHand} />
+            <Dealer cards={dealerHand} flipped={flipped} />
           </Col>
           <Col xs="2" className="first-row-third-col"></Col>
         </Row>
@@ -140,7 +146,7 @@ const PlayingTable = ({ deck }) => {
             <Score name={"Player"} points={playerScore} />
           </Col>
           <Col xs="8" className="third-row-second-col">
-            <Hand owner={"Player"} cards={playerHand} />
+            <Player cards={playerHand} />
           </Col>
           <Col xs="2" className="third-row-third-col">
             <Button
