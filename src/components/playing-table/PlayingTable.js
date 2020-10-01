@@ -16,7 +16,8 @@ const PlayingTable = ({ deck }) => {
   const [playerScore, setPlayerScore] = useState(0);
   const [dealerScore, setDealerScore] = useState(0);
   const [alertMsgValue, setAlertMsgValue] = useState("");
-  const [gameOver, setGameOver] = useState(false);
+  const [showAlertMsg, setShowAlertMsg] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   // intial hand
   useEffect(() => {
@@ -54,11 +55,13 @@ const PlayingTable = ({ deck }) => {
 
     // bust if initial hand contains two aces, as ace only represents 11 points currently.
     if (pScore > 21) {
-      setAlertMsgValue("Bust!");
-      setGameOver(true);
+      setAlertMsgValue("Bust! You Lose.");
+      setDisabled(true);
+      setShowAlertMsg(true);
     } else if (dScore > 21) {
       setAlertMsgValue("Dealer is Bust. You Win!");
-      setGameOver(true);
+      setDisabled(true);
+      setShowAlertMsg(true);
     }
   }, [playerHand, dealerHand]);
 
@@ -92,22 +95,24 @@ const PlayingTable = ({ deck }) => {
     if (mergingArr.length > 0) {
       setDealerHand(dealerHand.concat(mergingArr));
     }
+    setDisabled(true);
   };
 
   const onEndClick = () => {
-    if (playerScore > dealerScore) {
+    if (playerScore <= 21 && playerScore > dealerScore) {
       setAlertMsgValue("You Win!");
-    } else if (playerScore < dealerScore) {
+    } else if (dealerScore <= 21 && dealerScore > playerScore) {
       setAlertMsgValue("You Lose!");
-    } else {
+    } else if (playerScore === dealerScore) {
       setAlertMsgValue("You've tied with the Dealer.");
     }
-    setGameOver(true);
+    setShowAlertMsg(true);
+    setDisabled(true);
   };
 
   return (
     <div>
-      {gameOver ? <AlertMessage msg={alertMsgValue} /> : null}
+      {showAlertMsg ? <AlertMessage message={alertMsgValue} /> : null}
       <Container className="grid-container" fluid={true}>
         <Row className="first-row">
           <Col xs="2" className="first-row-first-col">
@@ -140,19 +145,23 @@ const PlayingTable = ({ deck }) => {
           <Col xs="2" className="third-row-third-col">
             <Button
               className="action-btn"
-              disabled={gameOver}
+              disabled={disabled}
               onClick={onHitClick}
             >
               Hit
             </Button>
             <Button
               className="action-btn"
-              disabled={gameOver}
+              disabled={disabled}
               onClick={onStandClick}
             >
               Stand
             </Button>
-            <Button className="action-btn" onClick={onEndClick}>
+            <Button
+              className="action-btn"
+              disabled={!disabled}
+              onClick={onEndClick}
+            >
               End
             </Button>
           </Col>

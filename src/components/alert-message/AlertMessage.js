@@ -3,7 +3,7 @@ import { Alert, Button } from "reactstrap";
 
 import "./AlertMessage.css";
 
-const AlertMesage = ({ msg }) => {
+const AlertMesage = ({ message }) => {
   const refresh = () => {
     window.location.reload();
   };
@@ -11,7 +11,7 @@ const AlertMesage = ({ msg }) => {
   return (
     <div>
       <Alert className="alert" color="secondary">
-        {msg}
+        {message}
         <Button className="alert-btn" onClick={refresh}>
           Play Again
         </Button>
